@@ -1,17 +1,35 @@
+/* function toggle spiner */
+const toggleSpiner = (spinerStyle) => {
+  document.getElementById('spiners').style.display = spinerStyle;
+};
+
 // get input value
 // add button event
 const loadPhones = async () => {
   // get input
   const searchInput = document.getElementById('search-input');
+
+  /* call the spiner function show*/
+  toggleSpiner('block');
+
   const searchInputText = searchInput.value;
   // get emty search input
   searchInput.value = '';
 
-  /* validation if search input is emty */
+  /*************************************************
+  validation if search input is emty or a number 
+  **************************************************/
   const errorMsg = document.getElementById('error-msg');
   if (searchInputText == '') {
     errorMsg.innerText = 'Please Input A Phone Name';
     errorMsg.style.display = 'block';
+    /* call the spiner function hide */
+    toggleSpiner('none');
+  } else if (!isNaN(searchInputText)) {
+    errorMsg.innerText = 'Number is not a phone name';
+    errorMsg.style.display = 'block';
+    /* call the spiner function hide */
+    toggleSpiner('none');
   } else {
     /* fetching the api */
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchInputText}`;
@@ -33,6 +51,7 @@ const displayPhones = (phones) => {
   const phonesDiv = document.getElementById('phones');
   /* emty the full element after get results */
   phonesDiv.innerHTML = '';
+
   // foreach loop in the all phones
   phones.forEach((phone) => {
     const div = document.createElement('div');
@@ -56,9 +75,15 @@ const displayPhones = (phones) => {
     `;
     phonesDiv.appendChild(div);
   });
+  /* call the spiner function hide */
+  toggleSpiner('none');
 };
-/* load phone details function */
+/************************
+ load phone details function 
+ ****************************/
 const phonesDetails = async (id) => {
+  /* call the spiner function show*/
+  toggleSpiner('block');
   // call the dynamically id api
   const url = `https://openapi.programming-hero.com/api/phone/${id}`;
   const res = await fetch(url);
@@ -117,4 +142,6 @@ const displayPhonesDetails = (phones) => {
       </div>
   `;
   detailsDiv.appendChild(div);
+  /* call the spiner function hide */
+  toggleSpiner('none');
 };
