@@ -2,24 +2,28 @@
 const toggleSpiner = (spinerStyle) => {
   document.getElementById('spiners').style.display = spinerStyle;
 };
-/* function toggle spiner */
+/* function toggle toggle the phone div */
 const togglePhonesDiv = (detailsStyle) => {
   document.getElementById('phones').style.opacity = detailsStyle;
 };
 
-// get input value
-// add button event
+/********************
+   load the api
+  **********************/
 const loadPhones = async () => {
   /*************************************************
    get the input field value & call the spiner function & show get emty search input
   **************************************************/
   const searchInput = document.getElementById('search-input');
   toggleSpiner('block');
+  togglePhonesDiv(0);
+  detailsToggle('none');
   const searchInputText = searchInput.value;
   searchInput.value = '';
 
   /*************************************************
-  validation if search input is emty or a number 
+  validation if search input is emty or a number then get a error msg & hide the all content
+      call the spiner function hide 
   **************************************************/
   const errorMsg = document.getElementById('error-msg');
   if (searchInputText == '') {
@@ -28,10 +32,6 @@ const loadPhones = async () => {
     /* call the spiner function hide */
     toggleSpiner('none');
   } else if (!isNaN(searchInputText)) {
-    /********************************
-       if input is a number then get a error msg & hide the all content
-      call the spiner function hide 
-      ********************************/
     errorMsg.innerText = 'Number is not a phone name';
     errorMsg.style.display = 'block';
     toggleSpiner('none');
@@ -60,11 +60,11 @@ const loadPhones = async () => {
 };
 // display phones function
 const displayPhones = (phones) => {
-  /* get the search results div */
   /* call the phone details div */
   const detailsDiv = document.getElementById('phone-details');
   /* emty the phone details div */
   detailsDiv.textContent = '';
+
   const phonesDiv = document.getElementById('phones');
   /* emty the full element after get results */
   phonesDiv.innerHTML = '';
@@ -80,27 +80,36 @@ const displayPhones = (phones) => {
         <h5 class="card-title">Model: ${phone.phone_name}</h5>
         <p><strong>Brand:</strong> ${phone.brand}</p>
         <p class="card-text">
-            This is a wider card with supporting text below as a
-            natural lead-in to additional content. This content is a
-            little bit longer.
+            If You Want To Know <strong>${phone.phone_name}</strong> Full Specification, Please Click The See Details Button.
         </p>
         </div>
         <div class="card-footer">
-        <button onclick="phonesDetails('${phone.slug}')" class="btn btn-success">See Details</button>
+            <div class="d-grid gap-2 col-8 mx-auto">
+                <button onclick="phonesDetails('${phone.slug}')" class="btn btn-success">See Details</button>
+            </div>
         </div>
     </div>
     `;
     phonesDiv.appendChild(div);
   });
-  /* call the spiner function hide */
+  /* call the spiner function hide
+  and the show all div content  */
   toggleSpiner('none');
+  togglePhonesDiv(1);
 };
 /************************
  load phone details function 
  ****************************/
+/*********************** 
+ toggle function of display phoe details
+***********************/
+const detailsToggle = (detailsStyle) => {
+  document.getElementById('phone-details').style.display = detailsStyle;
+};
 const phonesDetails = async (id) => {
   /* call the spiner function show*/
   toggleSpiner('block');
+  detailsToggle('none');
   // call the dynamically id api
   const url = `https://openapi.programming-hero.com/api/phone/${id}`;
   const res = await fetch(url);
@@ -108,6 +117,7 @@ const phonesDetails = async (id) => {
   // call display details function
   displayPhonesDetails(data);
 };
+
 // display phone details function
 const displayPhonesDetails = (phones) => {
   // store data in phone variable
@@ -125,6 +135,7 @@ const displayPhonesDetails = (phones) => {
 
   const detailsDiv = document.getElementById('phone-details');
   /* emty the phone details div */
+
   detailsDiv.textContent = '';
   /* creating a div */
   const div = document.createElement('div');
@@ -138,7 +149,7 @@ const displayPhonesDetails = (phones) => {
           <p id="date"><strong>Release Date:</strong> ${phone.releaseDate}</p>
           <h5></h5>
           <ul class="list-group">
-          <li class="list-group-item list-group-item-danger"><h5>This Product Specification.</h5></li>
+          <li class="list-group-item list-group-item-danger"><h5>${phone.name} Full Specification.</h5></li>
         
           <li class="list-group-item list-group-item-success"><p>1. <strong>Storage:</strong> ${features.storage}</p></li>
           <li class="list-group-item list-group-item-success"><p>2. <strong>Display:</strong> ${features.displaySize}</p></li>
@@ -161,4 +172,5 @@ const displayPhonesDetails = (phones) => {
   detailsDiv.appendChild(div);
   /* call the spiner function hide */
   toggleSpiner('none');
+  detailsToggle('block');
 };
