@@ -6,24 +6,36 @@ const loadPhones = async () => {
   const searchInputText = searchInput.value;
   // get emty search input
   searchInput.value = '';
-  /* 
-    fetching the api
-  */
-  const url = `https://openapi.programming-hero.com/api/phones?search=${searchInputText}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  // call the display function
-  displayPhones(data.data);
-  //   console.log(data.data);
+
+  /* validation if search input is emty */
+  const errorMsg = document.getElementById('error-msg');
+  if (searchInputText == '') {
+    errorMsg.innerText = 'Please Input A Phone Name';
+    errorMsg.style.display = 'block';
+  } else {
+    /* fetching the api */
+    const url = `https://openapi.programming-hero.com/api/phones?search=${searchInputText}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    // call the display function
+    displayPhones(data.data);
+    // console.log(data.data[0].phone_name);
+    errorMsg.style.display = 'none';
+  }
 };
 // display phones function
 const displayPhones = (phones) => {
+  /* get the search results div */
+  /* call the phone details div */
+  const detailsDiv = document.getElementById('phone-details');
+  /* emty the phone details div */
+  detailsDiv.textContent = '';
+  const phonesDiv = document.getElementById('phones');
+  /* emty the full element after get results */
+  phonesDiv.innerHTML = '';
   // foreach loop in the all phones
   phones.forEach((phone) => {
-    const phonesDiv = document.getElementById('phones');
-    /* emty the full element after get results */
     const div = document.createElement('div');
-    phonesDiv.innerHTML = '';
     div.className = 'col';
     div.innerHTML = `
     <div class="card h-100">
@@ -45,9 +57,8 @@ const displayPhones = (phones) => {
     phonesDiv.appendChild(div);
   });
 };
-// load phone details function
+/* load phone details function */
 const phonesDetails = async (id) => {
-  //   console.log(id);
   // call the dynamically id api
   const url = `https://openapi.programming-hero.com/api/phone/${id}`;
   const res = await fetch(url);
@@ -57,16 +68,23 @@ const phonesDetails = async (id) => {
 };
 // display phone details function
 const displayPhonesDetails = (phones) => {
-  //   console.log(phones.data);
   // store data in phone variable
   const phone = phones.data;
 
   // store mainFeatures data into features variable
   const features = phone.mainFeatures;
+
   // store sensors data in sensor variable
   const sensor = features.sensors;
 
+  // store others data in other variable
+  const other = phone.others;
+  /* call the phone details div */
+
   const detailsDiv = document.getElementById('phone-details');
+  /* emty the phone details div */
+  detailsDiv.textContent = '';
+  /* creating a div */
   const div = document.createElement('div');
   div.className = 'col';
   div.innerHTML = `
@@ -75,16 +93,25 @@ const displayPhonesDetails = (phones) => {
           <div class="card-body">
           <h5 class="card-title">Model: ${phone.name}</h5>
           <p><strong>Brand:</strong> ${phone.brand}</p>
-          
           <p id="date"><strong>Release Date:</strong> ${phone.releaseDate}</p>
-          <h5>This Phone Specification.</h5>
-          <p>1. <strong>Storage:</strong> ${features.storage}</p>
-          <p>2. <strong>Display:</strong> ${features.displaySize}</p>
-          <p>3. <strong>Chip Set:</strong> ${features.chipSet}</p>
-          <p>4. <strong>RAM:</strong> ${features.memory}</p>
-          <p>5. <strong>Sensors:</strong> ${sensor[0]}</p>
-      
+          <h5></h5>
+          <ul class="list-group">
+          <li class="list-group-item list-group-item-danger"><h5>This Product Specification.</h5></li>
+        
+          <li class="list-group-item list-group-item-success"><p>1. <strong>Storage:</strong> ${features.storage}</p></li>
+          <li class="list-group-item list-group-item-success"><p>2. <strong>Display:</strong> ${features.displaySize}</p></li>
+          <li class="list-group-item list-group-item-success"><p>3. <strong>Chip Set:</strong> ${features.chipSet}</p></li>
+          <li class="list-group-item list-group-item-success"><p>4. <strong>RAM:</strong> ${features.memory}</p></li>
+          <li class="list-group-item list-group-item-success"><p>5. <strong>Sensors:</strong> ${sensor}</p></li>
+          <li class="list-group-item list-group-item-success"><p>6. <strong>WLAN:</strong> ${other.WLAN}</p></li>
+          <li class="list-group-item list-group-item-success"><p>7. <strong>Bluetooth:</strong> ${other.Bluetooth}</p></li>
+          <li class="list-group-item list-group-item-success"><p>7. <strong>Bluetooth:</strong> ${other.Bluetooth}</p></li>
+          <li class="list-group-item list-group-item-success"><p>8. <strong>GPS:</strong> ${other.GPS}</p></li>
+          <li class="list-group-item list-group-item-success"><p>9. <strong>NFC:</strong> ${other.NFC}</p></li>
+          <li class="list-group-item list-group-item-success"><p>10. <strong>Radio:</strong> ${other.Radio}</p></li>
+          <li class="list-group-item list-group-item-success"><p>11. <strong>USB:</strong> ${other.USB}</p></li>
           
+        </ul>   
           </div>
          
       </div>
