@@ -2,18 +2,20 @@
 const toggleSpiner = (spinerStyle) => {
   document.getElementById('spiners').style.display = spinerStyle;
 };
+/* function toggle spiner */
+const togglePhonesDiv = (detailsStyle) => {
+  document.getElementById('phones').style.opacity = detailsStyle;
+};
 
 // get input value
 // add button event
 const loadPhones = async () => {
-  // get input
+  /*************************************************
+   get the input field value & call the spiner function & show get emty search input
+  **************************************************/
   const searchInput = document.getElementById('search-input');
-
-  /* call the spiner function show*/
   toggleSpiner('block');
-
   const searchInputText = searchInput.value;
-  // get emty search input
   searchInput.value = '';
 
   /*************************************************
@@ -26,19 +28,34 @@ const loadPhones = async () => {
     /* call the spiner function hide */
     toggleSpiner('none');
   } else if (!isNaN(searchInputText)) {
+    /********************************
+       if input is a number then get a error msg & hide the all content
+      call the spiner function hide 
+      ********************************/
     errorMsg.innerText = 'Number is not a phone name';
     errorMsg.style.display = 'block';
-    /* call the spiner function hide */
     toggleSpiner('none');
+    togglePhonesDiv(0);
   } else {
     /* fetching the api */
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchInputText}`;
     const res = await fetch(url);
     const data = await res.json();
-    // call the display function
-    displayPhones(data.data);
-    // console.log(data.data[0].phone_name);
-    errorMsg.style.display = 'none';
+    if (data.data[0] == undefined) {
+      /********************************
+       if input is undefined then get a error msg & hide the all content
+      call the spiner function hide 
+      ********************************/
+      errorMsg.innerText = 'Your Phone Is Not Found';
+      errorMsg.style.display = 'block';
+      toggleSpiner('none');
+      togglePhonesDiv(0);
+    } else {
+      // call the display function
+      displayPhones(data.data);
+      errorMsg.style.display = 'none';
+      togglePhonesDiv(1);
+    }
   }
 };
 // display phones function
