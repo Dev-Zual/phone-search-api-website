@@ -55,3 +55,39 @@ const phonesDetails = async (id) => {
   // call display details function
   displayPhonesDetails(data);
 };
+// display phone details function
+const displayPhonesDetails = (phones) => {
+  //   console.log(phones.data);
+  // store data in phone variable
+  const phone = phones.data;
+
+  // store mainFeatures data into features variable
+  const features = phone.mainFeatures;
+  // store sensors data in sensor variable
+  const sensor = features.sensors;
+
+  const detailsDiv = document.getElementById('phone-details');
+  const div = document.createElement('div');
+  div.className = 'col';
+  div.innerHTML = `
+      <div class="card h-100">
+          <img src="${phone.image}" class="card-img-top w-25 mx-auto mt-3" alt="..." />
+          <div class="card-body">
+          <h5 class="card-title">Model: ${phone.name}</h5>
+          <p><strong>Brand:</strong> ${phone.brand}</p>
+          
+          <p id="date"><strong>Release Date:</strong> ${phone.releaseDate}</p>
+          <h5>This Phone Specification.</h5>
+          <p>1. <strong>Storage:</strong> ${features.storage}</p>
+          <p>2. <strong>Display:</strong> ${features.displaySize}</p>
+          <p>3. <strong>Chip Set:</strong> ${features.chipSet}</p>
+          <p>4. <strong>RAM:</strong> ${features.memory}</p>
+          <p>5. <strong>Sensors:</strong> ${sensor[0]}</p>
+      
+          
+          </div>
+         
+      </div>
+  `;
+  detailsDiv.appendChild(div);
+};
