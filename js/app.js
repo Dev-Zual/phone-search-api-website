@@ -69,11 +69,15 @@ const displayPhones = (phones) => {
   /* emty the full element after get results */
   phonesDiv.innerHTML = '';
 
-  // foreach loop in the all phones
-  phones.forEach((phone) => {
-    const div = document.createElement('div');
-    div.className = 'col';
-    div.innerHTML = `
+  if (phones.length > 20) {
+    const get20 = phones.slice(0, 20);
+
+    // foreach loop in the all phones
+    get20.forEach((phone) => {
+      console.log(phone);
+      const div = document.createElement('div');
+      div.className = 'col';
+      div.innerHTML = `
     <div class="card h-100">
         <img src="${phone.image}" class="card-img-top w-50 mx-auto mt-3" alt="..." />
         <div class="card-body">
@@ -90,12 +94,13 @@ const displayPhones = (phones) => {
         </div>
     </div>
     `;
-    phonesDiv.appendChild(div);
-  });
-  /* call the spiner function hide
+      phonesDiv.appendChild(div);
+    });
+    /* call the spiner function hide
   and the show all div content  */
-  toggleSpiner('none');
-  togglePhonesDiv(1);
+    toggleSpiner('none');
+    togglePhonesDiv(1);
+  }
 };
 /************************
  load phone details function 
@@ -107,7 +112,7 @@ const detailsToggle = (detailsStyle) => {
   document.getElementById('phone-details').style.display = detailsStyle;
 };
 const phonesDetails = async (id) => {
-  /* call the spiner function show*/
+  /* call the spiner function show and details div hide*/
   toggleSpiner('block');
   detailsToggle('none');
   // call the dynamically id api
@@ -170,7 +175,7 @@ const displayPhonesDetails = (phones) => {
       </div>
   `;
   detailsDiv.appendChild(div);
-  /* call the spiner function hide */
+  /* call the spiner function hide & details div block*/
   toggleSpiner('none');
   detailsToggle('block');
 };
